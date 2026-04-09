@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Admin — Point Info Conducteur 2.0 | KEOLIS NORD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root {
+            --turquoise: #00A5BE;
+            --turquoise-dark: #007A8C;
+            --turquoise-light: #E0F7FA;
+            --taupe: #786E5F;
+            --orange: #E87C1E;
+            --blanc: #FFFFFF;
+            --gris-clair: #F5F5F5;
+            --gris: #9E9E9E;
+            --noir: #333333;
+            --vert: #4CAF50;
+            --rouge: #E53935;
+            --bleu: #1976D2;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--gris-clair); color: var(--noir); min-height: 100vh; }
+        
+        /* Login */
+        .login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--turquoise), var(--turquoise-dark)); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-overlay.hidden { display: none; }
+        .login-box { background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 350px; width: 90%; }
+        .login-box h2 { color: var(--turquoise-dark); margin-bottom: 10px; }
+        .login-box p { color: var(--gris); margin-bottom: 25px; font-size: 0.9rem; }
+        .pin-inputs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .pin-inputs input { width: 50px; height: 60px; text-align: center; font-size: 1.5rem; font-weight: bold; border: 2px solid var(--gris); border-radius: 10px; }
+        .pin-inputs input:focus { outline: none; border-color: var(--turquoise); }
+        .login-error { color: var(--rouge); font-size: 0.85rem; margin-top: 10px; display: none; }
+        .login-error.show { display: block; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, var(--turquoise), var(--turquoise-dark)); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.3rem; }
+        .header-actions { display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-success { background: var(--vert); color: white; }
+        .btn-success:hover { background: #43A047; }
+        .btn-danger { background: var(--rouge); color: white; }
+        .btn-primary { background: var(--bleu); color: white; }
+        .btn-secondary { background: var(--gris); color: white; }
+        .btn-logout { background: rgba(255,255,255,0.2); color: white; }
+        
+        /* Save indicator */
+        .save-indicator { position: fixed; top: 80px; right: 20px; padding: 12px 20px; border-radius: 10px; font-weight: 600; z-index: 100; display: none; }
+        .save-indicator.saving { display: block; background: #FFF3E0; color: var(--orange); }
+        .save-indicator.saved { display: block; background: #E8F5E9; color: var(--vert); }
+        .save-indicator.error { display: block; background: #FFEBEE; color: var(--rouge); }
+        
+        /* Navigation */
+        .nav { background: white; border-bottom: 1px solid #ddd; display: flex; overflow-x: auto; }
+        .nav-tab { flex: 1; padding: 15px 10px; border: none; background: none; cursor: pointer; font-size: 0.85rem; color: var(--gris); border-bottom: 3px solid transparent; transition: all 0.2s; min-width: 100px; }
+        .nav-tab:hover { color: var(--turquoise); }
+        .nav-tab.active { color: var(--turquoise); border-bottom-color: var(--turquoise); font-weight: 600; }
+        
+        /* Main */
+        .main { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Cards */
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; }
+        .card-header { padding: 15px 20px; background: var(--gris-clair); border-bottom: 1px solid #eee; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .card-body { padding: 20px; }
+        
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: var(--noir); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--turquoise); }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        
+        /* Items list */
+        .item-card { background: var(--gris-clair); border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .item-content { flex: 1; }
+        .item-title { font-weight: 600; margin-bottom: 5px; }
+        .item-desc { font-size: 0.85rem; color: var(--gris); }
+        .item-actions { display: flex; gap: 8px; }
+        .btn-icon { width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        
+        /* Add form */
+        .add-form { background: #E3F2FD; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none; }
+        .add-form.show { display: block; }
+        
+        /* Status badge */
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .status-badge.active { background: #E8F5E9; color: var(--vert); }
+        .status-badge.inactive { background: #FFEBEE; color: var(--rouge); }
+        
+        /* Toggle */
+        .toggle { position: relative; width: 50px; height: 26px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 26px; transition: 0.3s; }
+        .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle input:checked + .toggle-slider { background: var(--vert); }
+        .toggle input:checked + .toggle-slider:before { transform: translateX(24px); }
+        
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: var(--gris); }
+        .loading-spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--turquoise); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2>🔧 Admin PIC 2.0</h2>
+            <p>Entrez le code exploitation</p>
+            <div class="pin-inputs">
+                <input type="tel" maxlength="1" id="pin1" autofocus>
+                <input type="tel" maxlength="1" id="pin2">
+                <input type="tel" maxlength="1" id="pin3">
+                <input type="tel" maxlength="1" id="pin4">
+            </div>
+            <p class="login-error" id="loginError">Code incorrect</p>
+        </div>
+    </div>
+    
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="saveIndicator">
+        <i class="fas fa-spinner fa-spin"></i> Enregistrement...
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🔧 Admin — Point Info Conducteur</h1>
+        <div class="header-actions">
+            <button class="btn btn-success" onclick="sauvegarderTout()">
+                <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <button class="btn btn-logout" onclick="deconnexion()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-tab active" data-tab="parametres"><i class="fas fa-cog"></i> Paramètres</button>
+        <button class="nav-tab" data-tab="kpi"><i class="fas fa-chart-line"></i> KPIs</button>
+        <button class="nav-tab" data-tab="alertes"><i class="fas fa-exclamation-triangle"></i> Alertes</button>
+        <button class="nav-tab" data-tab="safety"><i class="fas fa-shield-alt"></i> Safety</button>
+        <button class="nav-tab" data-tab="videos"><i class="fas fa-video"></i> Vidéos</button>
+        <button class="nav-tab" data-tab="equipe"><i class="fas fa-users"></i> Équipe</button>
+        <button class="nav-tab" data-tab="sondages"><i class="fas fa-poll"></i> Sondages</button>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main" id="mainContent">
+        
+        <div class="loading" id="loadingScreen">
+            <div class="loading-spinner"></div>
+            <p>Chargement des données...</p>
+        </div>
+        
+        <!-- Paramètres -->
+        <section id="parametres" class="tab-content">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-cog"></i> Paramètres généraux</div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Numéro de semaine</label>
+                            <input type="number" id="param-semaine" min="1" max="53">
+                        </div>
+                        <div class="form-group">
+                            <label>Date début</label>
+                            <input type="date" id="param-date-debut">
+                        </div>
+                        <div class="form-group">
+                            <label>Date fin</label>
+                            <input type="date" id="param-date-fin">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Effectif total</label>
+                            <input type="number" id="param-effectif">
+                        </div>
+                        <div class="form-group">
+                            <label>Dépôt</label>
+                            <input type="text" id="param-depot" value="Comines">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><i class="fas fa-calendar"></i> Prochain Point CR</div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="pcr-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Heure</label>
+                            <input type="time" id="pcr-heure">
+                        </div>
+                        <div class="form-group">
+                            <label>Lieu</label>
+                            <input type="text" id="pcr-lieu" placeholder="Salle de prise de service">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><i class="fas fa-trophy"></i> Défi 100 jours sans AT</div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Actif</label>
+                            <label class="toggle">
+                                <input type="checkbox" id="defi-actif">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Jours actuels</label>
+                            <input type="number" id="defi-jours" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Date début</label>
+                            <input type="date" id="defi-date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- KPIs -->
+        <section id="kpi" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-chart-line"></i> Indicateurs KPI</span>
+                    <button class="btn btn-primary" onclick="toggleForm('kpi-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="kpi-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input type="text" id="new-kpi-nom" placeholder="Ex: Accidents">
+                            </div>
+                            <div class="form-group">
+                                <label>Valeur</label>
+                                <input type="number" id="new-kpi-valeur">
+                            </div>
+                            <div class="form-group">
+                                <label>Catégorie</label>
+                                <select id="new-kpi-cat">
+                                    <option value="securite">Sécurité</option>
+                                    <option value="qualite">Qualité</option>
+                                    <option value="humain">Humain</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tendance</label>
+                                <select id="new-kpi-tendance">
+                                    <option value="stable">Stable =</option>
+                                    <option value="up">Hausse ↑</option>
+                                    <option value="down">Baisse ↓</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Icône (FontAwesome)</label>
+                                <input type="text" id="new-kpi-icone" placeholder="fa-car-crash">
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterKPI()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('kpi-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="kpi-list"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Alertes -->
+        <section id="alertes" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-exclamation-triangle"></i> Alertes & Consignes</span>
+                    <button class="btn btn-primary" onclick="toggleForm('alerte-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="alerte-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Titre</label>
+                                <input type="text" id="new-alerte-titre" placeholder="Ex: Travaux rue X">
+                            </div>
+                            <div class="form-group">
+                                <label>Priorité</label>
+                                <select id="new-alerte-priorite">
+                                    <option value="normal">🔵 Normal</option>
+                                    <option value="urgent">🟠 Urgent</option>
+                                    <option value="critique">🔴 Critique</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="new-alerte-desc" rows="3" placeholder="Détails..."></textarea>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterAlerte()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('alerte-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="alertes-list"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Safety Moments -->
+        <section id="safety" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-shield-alt"></i> Safety Moments</span>
+                    <button class="btn btn-primary" onclick="toggleForm('safety-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="safety-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Titre</label>
+                                <input type="text" id="new-safety-titre" placeholder="Ex: Port des EPI">
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" id="new-safety-date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="new-safety-desc" rows="3" placeholder="Message de sécurité..."></textarea>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterSafety()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('safety-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="safety-list"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Vidéos -->
+        <section id="videos" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-video"></i> Vidéos HSE</span>
+                    <button class="btn btn-primary" onclick="toggleForm('video-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="video-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Titre</label>
+                                <input type="text" id="new-video-titre" placeholder="Ex: Sécurité KEOLIS">
+                            </div>
+                            <div class="form-group">
+                                <label>URL</label>
+                                <input type="url" id="new-video-url" placeholder="https://youtu.be/...">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Source</label>
+                                <input type="text" id="new-video-source" placeholder="KEOLIS">
+                            </div>
+                            <div class="form-group">
+                                <label>Durée</label>
+                                <input type="text" id="new-video-duree" placeholder="3:00">
+                            </div>
+                            <div class="form-group">
+                                <label>Nouveau ?</label>
+                                <label class="toggle">
+                                    <input type="checkbox" id="new-video-nouveau" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterVideo()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('video-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="videos-list"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Équipe -->
+        <section id="equipe" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-users"></i> Équipe Exploitation</span>
+                    <button class="btn btn-primary" onclick="toggleForm('equipe-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="equipe-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Prénom</label>
+                                <input type="text" id="new-membre-prenom">
+                            </div>
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input type="text" id="new-membre-nom">
+                            </div>
+                            <div class="form-group">
+                                <label>Rôle</label>
+                                <select id="new-membre-role">
+                                    <option value="Chef de Centre">Chef de Centre</option>
+                                    <option value="Exploitant">Exploitant</option>
+                                    <option value="Stagiaire">Stagiaire</option>
+                                    <option value="HSE">HSE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="new-membre-email" placeholder="prenom.nom@keolis.com">
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterMembre()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('equipe-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="equipe-list"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Sondages -->
+        <section id="sondages" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-poll"></i> Sondages</span>
+                    <button class="btn btn-primary" onclick="toggleForm('sondage-form')"><i class="fas fa-plus"></i> Ajouter</button>
+                </div>
+                <div class="card-body">
+                    <div class="add-form" id="sondage-form">
+                        <div class="form-group">
+                            <label>Question</label>
+                            <input type="text" id="new-sondage-question" placeholder="Ex: Êtes-vous satisfait... ?">
+                        </div>
+                        <div class="form-group">
+                            <label>Options (une par ligne)</label>
+                            <textarea id="new-sondage-options" rows="4" placeholder="Très satisfait&#10;Satisfait&#10;Peu satisfait"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Date fin</label>
+                            <input type="date" id="new-sondage-date">
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn btn-success" onclick="ajouterSondage()"><i class="fas fa-check"></i> Ajouter</button>
+                            <button class="btn btn-secondary" onclick="toggleForm('sondage-form')"><i class="fas fa-times"></i> Annuler</button>
+                        </div>
+                    </div>
+                    <div id="sondages-list"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><i class="fas fa-lightbulb"></i> Suggestions reçues (Firebase)</div>
+                <div class="card-body" id="suggestions-list">
+                    <p style="color:var(--gris)">Les suggestions des conducteurs apparaissent ici...</p>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <script>
+        // 🔥 FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpWe_Bb5R6X-xUBW-1JbAhtWhEeBfA5m4",
+            authDomain: "point-info-conducteur.firebaseapp.com",
+            databaseURL: "https://point-info-conducteur-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "point-info-conducteur",
+            storageBucket: "point-info-conducteur.firebasestorage.app",
+            messagingSenderId: "131293131118",
+            appId: "1:131293131118:web:7076f0101418ceaf49517f"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        // Données
+        let data = {
+            parametres: { semaine: "15", date_debut: "", date_fin: "", depot: "Comines", effectif_total: "146" },
+            prochain_point_cr: { date: "", heure: "10:00", lieu: "Salle de prise de service" },
+            defi_100_jours: { actif: true, jours_actuels: 0, date_debut: "" },
+            kpi: [],
+            alertes: [],
+            safety_moments: [],
+            videos: [],
+            equipe: [],
+            sondages: []
+        };
+        
+        const CODE_ADMIN = "1982";
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // CONNEXION
+        // ══════════════════════════════════════════════════════════════════════
+        
+        const pins = [document.getElementById('pin1'), document.getElementById('pin2'), document.getElementById('pin3'), document.getElementById('pin4')];
+        
+        pins.forEach((input, i) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                if (e.target.value && i < 3) pins[i + 1].focus();
+                if (i === 3 && e.target.value) verifierCode();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && i > 0) pins[i - 1].focus();
+            });
+        });
+        
+        function verifierCode() {
+            const code = pins.map(p => p.value).join('');
+            if (code === CODE_ADMIN) {
+                sessionStorage.setItem('admin_session', 'active');
+                document.getElementById('loginOverlay').classList.add('hidden');
+                chargerDonnees();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                pins.forEach(p => { p.value = ''; p.style.borderColor = 'var(--rouge)'; });
+                pins[0].focus();
+            }
+        }
+        
+        function verifierSession() {
+            if (sessionStorage.getItem('admin_session') === 'active') {
+                document.getElementById('loginOverlay').classList.add('hidden');
+                chargerDonnees();
+            }
+        }
+        
+        function deconnexion() {
+            if (confirm('Déconnexion ?')) {
+                sessionStorage.removeItem('admin_session');
+                location.reload();
+            }
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // NAVIGATION
+        // ══════════════════════════════════════════════════════════════════════
+        
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        function toggleForm(id) {
+            document.getElementById(id).classList.toggle('show');
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // FIREBASE - CHARGER
+        // ══════════════════════════════════════════════════════════════════════
+        
+        function chargerDonnees() {
+            db.ref('donnees').once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    data = { ...data, ...snapshot.val() };
+                }
+                remplirFormulaires();
+                renderAll();
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('parametres').classList.add('active');
+            }).catch(err => {
+                console.error('Erreur chargement:', err);
+                alert('Erreur de chargement des données');
+            });
+            
+            // Charger suggestions en temps réel
+            db.ref('suggestions').on('value', snapshot => {
+                renderSuggestions(snapshot.val());
+            });
+        }
+        
+        function remplirFormulaires() {
+            document.getElementById('param-semaine').value = data.parametres.semaine || '';
+            document.getElementById('param-date-debut').value = data.parametres.date_debut || '';
+            document.getElementById('param-date-fin').value = data.parametres.date_fin || '';
+            document.getElementById('param-effectif').value = data.parametres.effectif_total || '';
+            document.getElementById('param-depot').value = data.parametres.depot || 'Comines';
+            
+            document.getElementById('pcr-date').value = data.prochain_point_cr?.date || '';
+            document.getElementById('pcr-heure').value = data.prochain_point_cr?.heure || '10:00';
+            document.getElementById('pcr-lieu').value = data.prochain_point_cr?.lieu || '';
+            
+            document.getElementById('defi-actif').checked = data.defi_100_jours?.actif ?? true;
+            document.getElementById('defi-jours').value = data.defi_100_jours?.jours_actuels || 0;
+            document.getElementById('defi-date').value = data.defi_100_jours?.date_debut || '';
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // FIREBASE - SAUVEGARDER
+        // ══════════════════════════════════════════════════════════════════════
+        
+        function showSaveStatus(status) {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.className = 'save-indicator ' + status;
+            if (status === 'saving') {
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+            } else if (status === 'saved') {
+                indicator.innerHTML = '<i class="fas fa-check"></i> Enregistré !';
+                setTimeout(() => { indicator.className = 'save-indicator'; }, 2000);
+            } else if (status === 'error') {
+                indicator.innerHTML = '<i class="fas fa-times"></i> Erreur !';
+                setTimeout(() => { indicator.className = 'save-indicator'; }, 3000);
+            }
+        }
+        
+        function collecterDonnees() {
+            data.parametres.semaine = document.getElementById('param-semaine').value;
+            data.parametres.date_debut = document.getElementById('param-date-debut').value;
+            data.parametres.date_fin = document.getElementById('param-date-fin').value;
+            data.parametres.effectif_total = document.getElementById('param-effectif').value;
+            data.parametres.depot = document.getElementById('param-depot').value;
+            
+            data.prochain_point_cr = {
+                date: document.getElementById('pcr-date').value,
+                heure: document.getElementById('pcr-heure').value,
+                lieu: document.getElementById('pcr-lieu').value
+            };
+            
+            data.defi_100_jours = {
+                actif: document.getElementById('defi-actif').checked,
+                jours_actuels: parseInt(document.getElementById('defi-jours').value) || 0,
+                date_debut: document.getElementById('defi-date').value
+            };
+        }
+        
+        function sauvegarderTout() {
+            collecterDonnees();
+            showSaveStatus('saving');
+            
+            db.ref('donnees').set(data).then(() => {
+                showSaveStatus('saved');
+            }).catch(err => {
+                console.error('Erreur sauvegarde:', err);
+                showSaveStatus('error');
+            });
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // RENDER FUNCTIONS
+        // ══════════════════════════════════════════════════════════════════════
+        
+        function renderAll() {
+            renderKPIs();
+            renderAlertes();
+            renderSafety();
+            renderVideos();
+            renderEquipe();
+            renderSondages();
+        }
+        
+        function renderKPIs() {
+            const list = document.getElementById('kpi-list');
+            if (!data.kpi || !data.kpi.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucun KPI</p>';
+                return;
+            }
+            list.innerHTML = data.kpi.map((k, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title"><i class="fas ${k.icone}"></i> ${k.nom}</div>
+                        <div class="item-desc">Valeur: ${k.valeur} | ${k.categorie} | Tendance: ${k.tendance}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger btn-icon" onclick="supprimerKPI(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderAlertes() {
+            const list = document.getElementById('alertes-list');
+            if (!data.alertes || !data.alertes.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucune alerte</p>';
+                return;
+            }
+            const icons = { critique: '🔴', urgent: '🟠', normal: '🔵' };
+            list.innerHTML = data.alertes.map((a, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">${icons[a.priorite]} ${a.titre}</div>
+                        <div class="item-desc">${a.description}</div>
+                    </div>
+                    <div class="item-actions">
+                        <span class="status-badge ${a.actif ? 'active' : 'inactive'}">${a.actif ? 'Actif' : 'Inactif'}</span>
+                        <button class="btn btn-secondary btn-icon" onclick="toggleAlerte(${i})"><i class="fas fa-eye${a.actif ? '-slash' : ''}"></i></button>
+                        <button class="btn btn-danger btn-icon" onclick="supprimerAlerte(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderSafety() {
+            const list = document.getElementById('safety-list');
+            if (!data.safety_moments || !data.safety_moments.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucun Safety Moment</p>';
+                return;
+            }
+            list.innerHTML = data.safety_moments.map((s, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">🦺 ${s.titre}</div>
+                        <div class="item-desc">${s.description} — ${s.date}</div>
+                    </div>
+                    <div class="item-actions">
+                        <span class="status-badge ${s.actif ? 'active' : 'inactive'}">${s.actif ? 'Actif' : 'Inactif'}</span>
+                        <button class="btn btn-secondary btn-icon" onclick="toggleSafety(${i})"><i class="fas fa-eye${s.actif ? '-slash' : ''}"></i></button>
+                        <button class="btn btn-danger btn-icon" onclick="supprimerSafety(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderVideos() {
+            const list = document.getElementById('videos-list');
+            if (!data.videos || !data.videos.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucune vidéo</p>';
+                return;
+            }
+            list.innerHTML = data.videos.map((v, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">🎬 ${v.titre} ${v.nouveau ? '<span style="background:var(--vert);color:white;padding:2px 8px;border-radius:10px;font-size:0.7rem;">Nouveau</span>' : ''}</div>
+                        <div class="item-desc">${v.source} — ${v.duree}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger btn-icon" onclick="supprimerVideo(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderEquipe() {
+            const list = document.getElementById('equipe-list');
+            if (!data.equipe || !data.equipe.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucun membre</p>';
+                return;
+            }
+            list.innerHTML = data.equipe.map((m, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">👤 ${m.prenom} ${m.nom}</div>
+                        <div class="item-desc">${m.role} — ${m.email || 'Pas d\'email'}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger btn-icon" onclick="supprimerMembre(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderSondages() {
+            const list = document.getElementById('sondages-list');
+            if (!data.sondages || !data.sondages.length) {
+                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucun sondage</p>';
+                return;
+            }
+            list.innerHTML = data.sondages.map((s, i) => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">📊 ${s.question}</div>
+                        <div class="item-desc">${s.options.map(o => o.texte).join(' | ')} — Fin: ${s.date_fin}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger btn-icon" onclick="supprimerSondage(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderSuggestions(suggestions) {
+            const list = document.getElementById('suggestions-list');
+            if (!suggestions) {
+                list.innerHTML = '<p style="color:var(--gris)">Aucune suggestion reçue</p>';
+                return;
+            }
+            const arr = Object.values(suggestions);
+            list.innerHTML = arr.map(s => `
+                <div class="item-card">
+                    <div class="item-content">
+                        <div class="item-title">💡 ${s.auteur}</div>
+                        <div class="item-desc">${s.texte}</div>
+                        <div style="font-size:0.75rem;color:var(--gris);margin-top:5px;">${new Date(s.date).toLocaleString('fr-FR')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // AJOUTER / SUPPRIMER
+        // ══════════════════════════════════════════════════════════════════════
+        
+        function ajouterKPI() {
+            const kpi = {
+                nom: document.getElementById('new-kpi-nom').value,
+                valeur: document.getElementById('new-kpi-valeur').value,
+                categorie: document.getElementById('new-kpi-cat').value,
+                tendance: document.getElementById('new-kpi-tendance').value,
+                icone: document.getElementById('new-kpi-icone').value || 'fa-chart-bar'
+            };
+            if (kpi.nom) {
+                if (!data.kpi) data.kpi = [];
+                data.kpi.push(kpi);
+                renderKPIs();
+                toggleForm('kpi-form');
+                document.getElementById('new-kpi-nom').value = '';
+                document.getElementById('new-kpi-valeur').value = '';
+            }
+        }
+        
+        function supprimerKPI(i) { if (confirm('Supprimer ?')) { data.kpi.splice(i, 1); renderKPIs(); } }
+        
+        function ajouterAlerte() {
+            const alerte = {
+                titre: document.getElementById('new-alerte-titre').value,
+                description: document.getElementById('new-alerte-desc').value,
+                priorite: document.getElementById('new-alerte-priorite').value,
+                actif: true
+            };
+            if (alerte.titre) {
+                if (!data.alertes) data.alertes = [];
+                data.alertes.unshift(alerte);
+                renderAlertes();
+                toggleForm('alerte-form');
+                document.getElementById('new-alerte-titre').value = '';
+                document.getElementById('new-alerte-desc').value = '';
+            }
+        }
+        
+        function supprimerAlerte(i) { if (confirm('Supprimer ?')) { data.alertes.splice(i, 1); renderAlertes(); } }
+        function toggleAlerte(i) { data.alertes[i].actif = !data.alertes[i].actif; renderAlertes(); }
+        
+        function ajouterSafety() {
+            const safety = {
+                titre: document.getElementById('new-safety-titre').value,
+                description: document.getElementById('new-safety-desc').value,
+                date: document.getElementById('new-safety-date').value,
+                actif: true
+            };
+            if (safety.titre) {
+                if (!data.safety_moments) data.safety_moments = [];
+                data.safety_moments.unshift(safety);
+                renderSafety();
+                toggleForm('safety-form');
+                document.getElementById('new-safety-titre').value = '';
+                document.getElementById('new-safety-desc').value = '';
+            }
+        }
+        
+        function supprimerSafety(i) { if (confirm('Supprimer ?')) { data.safety_moments.splice(i, 1); renderSafety(); } }
+        function toggleSafety(i) { data.safety_moments[i].actif = !data.safety_moments[i].actif; renderSafety(); }
+        
+        function ajouterVideo() {
+            const video = {
+                titre: document.getElementById('new-video-titre').value,
+                url: document.getElementById('new-video-url').value,
+                source: document.getElementById('new-video-source').value,
+                duree: document.getElementById('new-video-duree').value,
+                nouveau: document.getElementById('new-video-nouveau').checked,
+                actif: true
+            };
+            if (video.titre && video.url) {
+                if (!data.videos) data.videos = [];
+                data.videos.unshift(video);
+                renderVideos();
+                toggleForm('video-form');
+                document.getElementById('new-video-titre').value = '';
+                document.getElementById('new-video-url').value = '';
+            }
+        }
+        
+        function supprimerVideo(i) { if (confirm('Supprimer ?')) { data.videos.splice(i, 1); renderVideos(); } }
+        
+        function ajouterMembre() {
+            const membre = {
+                prenom: document.getElementById('new-membre-prenom').value,
+                nom: document.getElementById('new-membre-nom').value,
+                role: document.getElementById('new-membre-role').value,
+                email: document.getElementById('new-membre-email').value,
+                couleur: '#1976D2',
+                actif: true
+            };
+            if (membre.prenom) {
+                if (!data.equipe) data.equipe = [];
+                data.equipe.push(membre);
+                renderEquipe();
+                toggleForm('equipe-form');
+                document.getElementById('new-membre-prenom').value = '';
+                document.getElementById('new-membre-nom').value = '';
+                document.getElementById('new-membre-email').value = '';
+            }
+        }
+        
+        function supprimerMembre(i) { if (confirm('Supprimer ?')) { data.equipe.splice(i, 1); renderEquipe(); } }
+        
+        function ajouterSondage() {
+            const question = document.getElementById('new-sondage-question').value;
+            const optionsText = document.getElementById('new-sondage-options').value;
+            const options = optionsText.split('\n').filter(o => o.trim()).map(o => ({ texte: o.trim(), votes: 0 }));
+            const sondage = {
+                question: question,
+                options: options,
+                date_fin: document.getElementById('new-sondage-date').value,
+                statut: 'actif'
+            };
+            if (question && options.length) {
+                if (!data.sondages) data.sondages = [];
+                data.sondages.unshift(sondage);
+                renderSondages();
+                toggleForm('sondage-form');
+                document.getElementById('new-sondage-question').value = '';
+                document.getElementById('new-sondage-options').value = '';
+            }
+        }
+        
+        function supprimerSondage(i) { if (confirm('Supprimer ?')) { data.sondages.splice(i, 1); renderSondages(); } }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // INIT
+        // ══════════════════════════════════════════════════════════════════════
+        
+        verifierSession();
+    </script>
+
+</body>
+</html>
