@@ -267,6 +267,46 @@
             <div class="card">
                 <div class="card-header securite"><i class="fas fa-chart-line"></i> Indicateurs</div>
                 <div class="card-body"><div class="kpi-grid" id="kpiGrid"></div></div>
+
+            <!-- Accidentologie Cumul 2026 -->
+            <div class="card" style="margin-top:0.75rem;">
+                <div class="card-header" style="background:linear-gradient(90deg,#FFEBEE,transparent);border-left:4px solid var(--rouge);">
+                    <i class="fas fa-car-crash" style="color:var(--rouge);"></i> Accidentologie — Cumul Jan/Avr 2026
+                    <a href="#" onclick="document.querySelector('[data-tab=securite]').click();return false;" style="margin-left:auto;font-size:0.75rem;color:var(--rouge);text-decoration:none;font-weight:600;">Détails →</a>
+                </div>
+                <div class="card-body" style="padding:0.75rem;">
+                    <div class="kpi-accidento">
+                        <div class="kpi-acc rouge">
+                            <div class="icon"><i class="fas fa-car-crash"></i></div>
+                            <div class="val">40</div>
+                            <div class="lbl">Accidents<br>Jan–Avr 2026</div>
+                            <div class="badge-acc bad"><i class="fas fa-arrow-up"></i> +29% vs 2025</div>
+                        </div>
+                        <div class="kpi-acc orange">
+                            <div class="icon"><i class="fas fa-gavel"></i></div>
+                            <div class="val">84%</div>
+                            <div class="lbl">Responsabilité<br>entière</div>
+                            <div class="badge-acc warn">27/32 accid.</div>
+                        </div>
+                        <div class="kpi-acc bleu">
+                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="val">55%</div>
+                            <div class="lbl">Points fixes<br>sans tiers</div>
+                            <div class="badge-acc warn">Évitables</div>
+                        </div>
+                        <div class="kpi-acc violet">
+                            <div class="icon"><i class="fas fa-id-card"></i></div>
+                            <div class="val">21</div>
+                            <div class="lbl">Accid. permis<br>&lt; 2 ans</div>
+                            <div class="badge-acc bad">53% du total</div>
+                        </div>
+                    </div>
+                    <div style="background:#FFEBEE;border-left:3px solid var(--rouge);padding:8px 10px;border-radius:6px;font-size:0.78rem;margin-top:0.5rem;display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:1.1rem;">⚠️</span>
+                        <span><strong>Mars & Avril :</strong> 12 accidents chacun — tendance haussière. <a href="rapports/rapport-accidentologie-janv-avril-2026.pdf" target="_blank" style="color:var(--rouge);font-weight:600;">Rapport PDF →</a></span>
+                    </div>
+                </div>
+            </div>
             </div>
         </section>
         
