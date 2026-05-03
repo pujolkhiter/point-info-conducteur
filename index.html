@@ -173,6 +173,45 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .error-box { background: var(--rouge-light); color: var(--rouge); padding: 1.5rem; border-radius: 10px; text-align: center; }
         .footer { text-align: center; padding: 1.5rem; color: var(--text-light); font-size: 0.8rem; }
+
+        /* Accidentologie */
+        .kpi-accidento { display:grid; grid-template-columns:repeat(2,1fr); gap:0.6rem; margin-bottom:1rem; }
+        @media(min-width:500px){ .kpi-accidento { grid-template-columns:repeat(4,1fr); } }
+        .kpi-acc { background:white; border-radius:12px; padding:0.9rem; text-align:center; border:1px solid var(--border); position:relative; overflow:hidden; }
+        .kpi-acc::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+        .kpi-acc.rouge::before { background:var(--rouge); }
+        .kpi-acc.orange::before { background:var(--orange); }
+        .kpi-acc.bleu::before { background:var(--bleu); }
+        .kpi-acc.violet::before { background:var(--violet); }
+        .kpi-acc .icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.4rem; font-size:1rem; }
+        .kpi-acc.rouge .icon { background:#FFEBEE; color:var(--rouge); }
+        .kpi-acc.orange .icon { background:#FFF3E0; color:var(--orange); }
+        .kpi-acc.bleu .icon { background:#E3F2FD; color:var(--bleu); }
+        .kpi-acc.violet .icon { background:#F3E5F5; color:var(--violet); }
+        .kpi-acc .val { font-size:1.8rem; font-weight:700; line-height:1; }
+        .kpi-acc.rouge .val { color:var(--rouge); }
+        .kpi-acc.orange .val { color:var(--orange); }
+        .kpi-acc.bleu .val { color:var(--bleu); }
+        .kpi-acc.violet .val { color:var(--violet); }
+        .kpi-acc .lbl { font-size:0.72rem; color:var(--text-light); margin-top:0.3rem; line-height:1.3; }
+        .kpi-acc .badge-acc { font-size:0.68rem; display:inline-flex; align-items:center; gap:2px; padding:2px 7px; border-radius:10px; margin-top:0.3rem; }
+        .badge-acc.bad { background:#FFEBEE; color:var(--rouge); }
+        .badge-acc.warn { background:#FFF3E0; color:var(--orange); }
+        .chart-bars { display:flex; align-items:flex-end; gap:0.4rem; height:120px; padding:0 0.25rem; border-bottom:2px solid var(--border); margin-bottom:0.5rem; }
+        .bar-col { flex:1; display:flex; gap:3px; align-items:flex-end; justify-content:center; flex-direction:column; }
+        .bar-pair { display:flex; gap:3px; align-items:flex-end; width:100%; justify-content:center; }
+        .b { border-radius:3px 3px 0 0; min-width:14px; flex:1; }
+        .b.cur { background:var(--rouge); }
+        .b.prv { background:#BDBDBD; }
+        .bar-lbl { font-size:0.68rem; text-align:center; color:var(--text-light); margin-top:3px; }
+        .profile-row { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.4rem; }
+        .profile-name { font-size:0.78rem; width:75px; flex-shrink:0; }
+        .profile-track { flex:1; background:#eee; border-radius:3px; height:18px; overflow:hidden; }
+        .profile-fill { height:100%; border-radius:3px; display:flex; align-items:center; padding-left:5px; }
+        .profile-fill span { font-size:0.7rem; font-weight:700; color:white; }
+        .profile-n { font-size:0.72rem; color:var(--text-light); width:25px; text-align:right; flex-shrink:0; }
+        .rapport-banner { background:linear-gradient(135deg,var(--rouge),#C62828); color:white; border-radius:12px; padding:1rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+        .dl-btn { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.2); color:white; padding:6px 12px; border-radius:16px; font-size:0.78rem; text-decoration:none; font-weight:600; margin-top:0.5rem; border:1px solid rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
@@ -232,6 +271,64 @@
         </section>
         
         <section id="securite" class="tab-content">
+
+            <!-- Rapport Accidentologie -->
+            <div class="rapport-banner">
+                <div style="font-size:1.8rem;">⚠️</div>
+                <div style="flex:1;">
+                    <div style="font-weight:700;font-size:0.9rem;">Rapport Accidentologie — Jan/Avr 2026</div>
+                    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">40 accidents ce quadrimestre — +29% vs 2025</div>
+                    <a class="dl-btn" href="rapports/rapport-accidentologie-janv-avril-2026.pdf" target="_blank"><i class="fas fa-file-pdf"></i> Télécharger le rapport</a>
+                </div>
+            </div>
+
+            <!-- KPIs Accidentologie -->
+            <div class="section-title" style="margin-bottom:0.75rem;"><i class="fas fa-car-crash" style="color:var(--rouge)"></i> Accidentologie — Quadrimestre 1/2026</div>
+            <div class="kpi-accidento">
+                <div class="kpi-acc rouge"><div class="icon"><i class="fas fa-car-crash"></i></div><div class="val">40</div><div class="lbl">Accidents<br>Jan–Avr 2026</div><div class="badge-acc bad"><i class="fas fa-arrow-up"></i> +29% vs 2025</div></div>
+                <div class="kpi-acc orange"><div class="icon"><i class="fas fa-gavel"></i></div><div class="val">84%</div><div class="lbl">Responsabilité<br>entière</div><div class="badge-acc warn">27/32 accidents</div></div>
+                <div class="kpi-acc bleu"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="val">55%</div><div class="lbl">Sur points fixes<br>sans tiers</div><div class="badge-acc warn">Évitables</div></div>
+                <div class="kpi-acc violet"><div class="icon"><i class="fas fa-id-card"></i></div><div class="val">7</div><div class="lbl">Accid. permis<br>1–2 ans (pic)</div><div class="badge-acc bad">Accompagnement +</div></div>
+            </div>
+
+            <!-- Graphique évolution mensuelle -->
+            <div class="card" style="margin-bottom:0.75rem;">
+                <div class="card-header securite"><i class="fas fa-chart-bar"></i> Évolution mensuelle 2026 vs 2025</div>
+                <div class="card-body" style="padding:1rem;">
+                    <div class="chart-bars">
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:105px" title="2026: 9"></div></div><div class="bar-lbl">Janv.<br><b>9</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:81px" title="2026: 7"></div></div><div class="bar-lbl">Févr.<br><b>7</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:140px" title="2026: 12"></div></div><div class="bar-lbl">Mars<br><b>12</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:105px" title="2025: ~10"></div><div class="b cur" style="height:140px" title="2026: 12"></div></div><div class="bar-lbl">Avr.<br><b>12</b></div></div>
+                    </div>
+                    <div style="display:flex;gap:1rem;font-size:0.75rem;margin-top:0.5rem;">
+                        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--rouge);margin-right:4px;vertical-align:middle;"></span>2026</span>
+                        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#BDBDBD;margin-right:4px;vertical-align:middle;"></span>2025 (N-1)</span>
+                    </div>
+                    <div style="background:#FFF3E0;border-left:3px solid var(--orange);padding:8px 10px;border-radius:6px;font-size:0.8rem;margin-top:0.75rem;">
+                        ⚠️ <strong>Mars & Avril : 12 accidents chacun</strong> — hausse confirmée vs 2025.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profil conducteurs -->
+            <div class="card" style="margin-bottom:0.75rem;">
+                <div class="card-header securite"><i class="fas fa-users"></i> Profil conducteurs accidentés — ancienneté</div>
+                <div class="card-body" style="padding:1rem;">
+                    <div class="profile-row"><div class="profile-name" style="font-weight:700;color:var(--rouge);">1–2 ans</div><div class="profile-track"><div class="profile-fill" style="width:100%;background:var(--rouge);"><span>7 accidents</span></div></div><div class="profile-n">7</div></div>
+                    <div class="profile-row"><div class="profile-name">2–6 mois</div><div class="profile-track"><div class="profile-fill" style="width:86%;background:#EF5350;"><span>6</span></div></div><div class="profile-n">6</div></div>
+                    <div class="profile-row"><div class="profile-name">2–5 ans</div><div class="profile-track"><div class="profile-fill" style="width:71%;background:var(--orange);"><span>5</span></div></div><div class="profile-n">5</div></div>
+                    <div class="profile-row"><div class="profile-name">6–12 mois</div><div class="profile-track"><div class="profile-fill" style="width:57%;background:var(--orange);"><span>4</span></div></div><div class="profile-n">4</div></div>
+                    <div class="profile-row"><div class="profile-name">1–2 mois</div><div class="profile-track"><div class="profile-fill" style="width:43%;background:#FFA726;"><span>3</span></div></div><div class="profile-n">3</div></div>
+                    <div class="profile-row"><div class="profile-name">5–10 ans</div><div class="profile-track"><div class="profile-fill" style="width:43%;background:#FFA726;"><span>3</span></div></div><div class="profile-n">3</div></div>
+                    <div class="profile-row"><div class="profile-name">10–20 ans</div><div class="profile-track"><div class="profile-fill" style="width:29%;background:var(--vert);"><span>2</span></div></div><div class="profile-n">2</div></div>
+                    <div class="profile-row"><div class="profile-name">15–30 j.</div><div class="profile-track"><div class="profile-fill" style="width:14%;background:var(--vert);"><span>1</span></div></div><div class="profile-n">1</div></div>
+                    <div style="background:#E3F2FD;border-left:3px solid var(--bleu);padding:8px 10px;border-radius:6px;font-size:0.8rem;margin-top:0.75rem;">
+                        💡 <strong>≤ 2 ans :</strong> 21 accidents sur 40 → Accompagnement renforcé prioritaire
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header securite"><i class="fas fa-shield-alt"></i> Safety Moments</div>
                 <div class="card-body" id="safetyList"></div>
