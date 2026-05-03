@@ -212,6 +212,15 @@
         .profile-n { font-size:0.72rem; color:var(--text-light); width:25px; text-align:right; flex-shrink:0; }
         .rapport-banner { background:linear-gradient(135deg,var(--rouge),#C62828); color:white; border-radius:12px; padding:1rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
         .dl-btn { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.2); color:white; padding:6px 12px; border-radius:16px; font-size:0.78rem; text-decoration:none; font-weight:600; margin-top:0.5rem; border:1px solid rgba(255,255,255,0.3); }
+
+        /* Onglet Lignes */
+        .ligne-card { background:white; border-radius:12px; padding:0.9rem 0.5rem; text-align:center; text-decoration:none; color:var(--text); border:1px solid var(--border); transition:all 0.2s; display:flex; flex-direction:column; align-items:center; gap:0.5rem; }
+        .ligne-card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+        .ligne-badge { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; font-weight:800; }
+        .ligne-btn { font-size:0.7rem; color:var(--turquoise); font-weight:600; }
+        .lignes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:0.6rem; margin-bottom:0.75rem; }
+        .rentree-accroche { background:linear-gradient(135deg,#00B4CC,#0099B0); color:white; border-radius:14px; padding:1.1rem 1.2rem; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.9rem; cursor:pointer; }
+        .rentree-accroche:hover { opacity:0.92; }
     </style>
 </head>
 <body>
@@ -242,6 +251,7 @@
             <button class="nav-tab" data-tab="videos"><i class="fas fa-video"></i> Vidéos</button>
             <button class="nav-tab" data-tab="equipe"><i class="fas fa-users"></i> Équipe</button>
             <button class="nav-tab" data-tab="sondages"><i class="fas fa-poll"></i> Sondages</button>
+            <button class="nav-tab" data-tab="lignes"><i class="fas fa-bus-alt"></i> Lignes</button>
             <button class="nav-tab" data-tab="idees"><i class="fas fa-lightbulb"></i> Idées</button>
             <button class="nav-tab" data-tab="photos"><i class="fas fa-camera"></i> Photos</button>
         </div>
@@ -258,6 +268,16 @@
                 <div class="stat-item"><div class="stat-value" id="statIdees">0</div><div class="stat-label">Idées</div></div>
             </div>
             
+
+            <!-- Bannière rentrée 2026 -->
+            <div class="rentree-accroche" onclick="document.querySelector('[data-tab=lignes]').click()">
+                <div style="font-size:2rem;">🚌</div>
+                <div style="flex:1;">
+                    <div style="font-weight:700;font-size:0.95rem;">Nouvelles lignes & plans — Rentrée 2026</div>
+                    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">24 lignes ILEVIA Comines disponibles. Consultez les plans mis à jour pour septembre 2026.</div>
+                </div>
+                <div style="font-size:1.2rem;opacity:0.8;">→</div>
+            </div>
             <div class="defi-card" id="defiCard" style="display:none;">
                 <h3>🏆 DÉFI 100 JOURS SANS AT</h3>
                 <div class="defi-jours" id="defiJours">0</div>
@@ -403,6 +423,47 @@
             </div>
         </section>
         
+        <section id="lignes" class="tab-content">
+
+            <div style="background:linear-gradient(135deg,#00B4CC,#0099B0);color:white;border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.9rem;">
+                <div style="font-size:2rem;">🚌</div>
+                <div>
+                    <div style="font-weight:700;font-size:1rem;">Plans de lignes ILEVIA</div>
+                    <div style="font-size:0.82rem;opacity:0.9;">Dépôt Comines — Rentrée Septembre 2026</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="color:#607D8B;"><i class="fas fa-bus-alt" style="color:#607D8B;"></i> Lignes interurbaines</div>
+            <div class="lignes-grid">
+                <a href="https://drive.google.com/file/d/1evrWGnMapkqFVGqqUO4djvCl5WMTC3Ol/view" target="_blank" class="ligne-card" style="border-top:4px solid #95C11F;"><div class="ligne-badge" style="background:#95C11F;color:#fff;">75</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1gim7o6_IZqAII5m3b9vKqJEy1cNOzPl-/view" target="_blank" class="ligne-card" style="border-top:4px solid #A877B2;"><div class="ligne-badge" style="background:#A877B2;color:#fff;">81</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1wycz98KLXOMni4z6jpgQyqTUrd0mmxgO/view" target="_blank" class="ligne-card" style="border-top:4px solid #F39200;"><div class="ligne-badge" style="background:#F39200;color:#fff;">82</div><div class="ligne-btn">Plan →</div></a>
+                <a href="https://drive.google.com/file/d/1MkX9yqdzbnijmq1WO9MoacIi4wF47gXH/view" target="_blank" class="ligne-card" style="border-top:4px solid #C69DC9;"><div class="ligne-badge" style="background:#C69DC9;color:#fff;">84</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/11buXRqoDh4xdkgd1opGBNfCHZXEUk-Nz/view" target="_blank" class="ligne-card" style="border-top:4px solid #E2001A;"><div class="ligne-badge" style="background:#E2001A;color:#fff;">86</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1UHLxP4V82KsBPLlgJxIfm1emmLu3iyTH/view" target="_blank" class="ligne-card" style="border-top:4px solid #FFDD00;"><div class="ligne-badge" style="background:#FFDD00;color:#000;">87</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1kOfURQZAxf_neW5pIDdUb5VV8SjXi_ny/view" target="_blank" class="ligne-card" style="border-top:4px solid #802E77;"><div class="ligne-badge" style="background:#802E77;color:#fff;">88</div><div class="ligne-btn">Plan →</div></a>
+            </div>
+
+            <div class="section-title" style="color:#E84E0F;"><i class="fas fa-bolt" style="color:#E84E0F;"></i> Lignes Express</div>
+            <div class="lignes-grid">
+                <a href="https://drive.google.com/file/d/16wxTexwRImcqU9EaPbsBk7XS9NFGHoy3/view" target="_blank" class="ligne-card" style="border-top:4px solid #E84E0F;"><div class="ligne-badge" style="background:#E84E0F;color:#fff;">E2</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1p_PTReDNuJ861VE_tScB1qlPKhYGrFVX/view" target="_blank" class="ligne-card" style="border-top:4px solid #D45000;"><div class="ligne-badge" style="background:#D45000;color:#fff;">E3</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1V3KfNPqm5SA5uEalFK3BYJKRjkHH2WMU/view" target="_blank" class="ligne-card" style="border-top:4px solid #C04000;"><div class="ligne-badge" style="background:#C04000;color:#fff;">E5</div><div class="ligne-btn">Plan →</div></a>
+            </div>
+
+            <div class="section-title" style="color:#00ACA5;"><i class="fas fa-route" style="color:#00ACA5;"></i> Lianes</div>
+            <div class="lignes-grid">
+                <a href="https://drive.google.com/file/d/1B9Cu5q8auX-X1wJ0aazYR-j0kONqbMh7/view" target="_blank" class="ligne-card" style="border-top:4px solid #00ACA5;"><div class="ligne-badge" style="background:#00ACA5;color:#fff;">L90</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1_30pR9dUDvyJWgDqECiwdXro-IbF5tyt/view" target="_blank" class="ligne-card" style="border-top:4px solid #00ACA5;"><div class="ligne-badge" style="background:#00ACA5;color:#fff;">L91</div><div class="ligne-btn">Plan →</div></a>
+            </div>
+
+            <div class="section-title" style="color:#333;"><i class="fas fa-moon" style="color:#333;"></i> Ligne de nuit</div>
+            <div class="lignes-grid"><a href="https://drive.google.com/file/d/1pPXsPFdVvNqmwuLHC5Tn_tqNf4mASBjF/view" target="_blank" class="ligne-card" style="border-top:4px solid #1D1C1B;"><div class="ligne-badge" style="background:#1D1C1B;color:#fff;">N1</div><div class="ligne-btn">Plan →</div></a></div>
+
+            <div class="section-title" style="color:#888;"><i class="fas fa-graduation-cap" style="color:#888;"></i> Lignes scolaires</div>
+            <div class="lignes-grid">
+                <a href="https://drive.google.com/file/d/1cFdW8IePN_8tk85DqheniHi1vg3fzmGN/view" target="_blank" class="ligne-card" style="border-top:4px solid #C8C8C8;"><div class="ligne-badge" style="background:#C8C8C8;color:#000;">S08</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/16I5Ib-SigLy2IEH_oBDCFwMpIKvtEZIw/view" target="_blank" class="ligne-card" style="border-top:4px solid #BEBEBE;"><div class="ligne-badge" style="background:#BEBEBE;color:#000;">S09</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/18GJWMKBiv5kIAO0v0Oz-tIinTD2h01GM/view" target="_blank" class="ligne-card" style="border-top:4px solid #B8B8B8;"><div class="ligne-badge" style="background:#B8B8B8;color:#000;">S11</div><div class="ligne-btn">Plan →</div></a>
+                <a href="https://drive.google.com/file/d/1WDYfHx6Q4_cwiRaPRdUA3dh7tXCxJNy6/view" target="_blank" class="ligne-card" style="border-top:4px solid #C8C8C8;"><div class="ligne-badge" style="background:#C8C8C8;color:#000;">S12</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1bkedhrZ1qLKlYOZKFC4H7VPhrMAOwax4/view" target="_blank" class="ligne-card" style="border-top:4px solid #BEBEBE;"><div class="ligne-badge" style="background:#BEBEBE;color:#000;">S13</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1K9y4HbufmD1X2joWnVboFZdpGyrbFJol/view" target="_blank" class="ligne-card" style="border-top:4px solid #B8B8B8;"><div class="ligne-badge" style="background:#B8B8B8;color:#000;">S31</div><div class="ligne-btn">Plan →</div></a>
+                <a href="https://drive.google.com/file/d/1JDW4SRs_MkpqdzL2UQi6Clj2eJOGut86/view" target="_blank" class="ligne-card" style="border-top:4px solid #C8C8C8;"><div class="ligne-badge" style="background:#C8C8C8;color:#000;">S40</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1XsBol9dQI3zaqBb882apBuDUHaxxQN-i/view" target="_blank" class="ligne-card" style="border-top:4px solid #BEBEBE;"><div class="ligne-badge" style="background:#BEBEBE;color:#000;">S41</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1x_3LTG-FgbsvQbkMmkMc0Ua298WaS92L/view" target="_blank" class="ligne-card" style="border-top:4px solid #B8B8B8;"><div class="ligne-badge" style="background:#B8B8B8;color:#000;">S50</div><div class="ligne-btn">Plan →</div></a>
+                <a href="https://drive.google.com/file/d/181AZxNO9bPs-ResICT-ctbSPCVC8YhJg/view" target="_blank" class="ligne-card" style="border-top:4px solid #C8C8C8;"><div class="ligne-badge" style="background:#C8C8C8;color:#000;">S57</div><div class="ligne-btn">Plan →</div></a><a href="https://drive.google.com/file/d/1Lib0933sGMezzR-_xdkRNgPcUeJaWQIK/view" target="_blank" class="ligne-card" style="border-top:4px solid #BEBEBE;"><div class="ligne-badge" style="background:#BEBEBE;color:#000;">S58</div><div class="ligne-btn">Plan →</div></a>
+            </div>
+            <div style="background:#E0F7FA;border-left:3px solid var(--turquoise);padding:8px 12px;border-radius:6px;font-size:0.78rem;margin-top:0.5rem;">
+                <i class="fas fa-info-circle"></i> Plans valables pour la <strong>rentrée Septembre 2026</strong> — Couleurs officielles réseau ILEVIA
+            </div>
+        </section>
+
         <section id="idees" class="tab-content">
             <div class="card">
                 <div class="card-header" style="background: linear-gradient(90deg, #FFF3E0, transparent); border-left: 4px solid var(--orange);"><i class="fas fa-lightbulb"></i> Boîte à idées</div>
