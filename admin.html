@@ -818,6 +818,13 @@
         // ══════════════════════════════════════════════════════════════════════
         
         function chargerDonnees() {
+            // Afficher l'UI immédiatement sans attendre Firebase
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            remplirFormulaires();
+            renderAll();
+
+            // Charger Firebase en arrière-plan
             db.ref('donnees').once('value').then(snapshot => {
                 if (snapshot.exists()) {
                     data = { ...data, ...snapshot.val() };
@@ -825,11 +832,8 @@
                 remplirFormulaires();
                 renderAll();
                 chargerStats();
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('dashboard').classList.add('active');
             }).catch(err => {
-                console.error('Erreur chargement:', err);
-                alert('Erreur de chargement des données');
+                console.error('Erreur chargement Firebase:', err);
             });
             
             // Charger suggestions en temps réel
