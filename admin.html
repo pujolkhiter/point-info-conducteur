@@ -1077,6 +1077,8 @@
         function remplirFormulaires() {
             document.getElementById('code-conducteur').value = data.codes?.conducteur || '2026';
             document.getElementById('code-admin').value = data.codes?.admin || '1982';
+            remplirAccidentologie();
+            remplirAccueil();
             
             document.getElementById('param-semaine').value = data.parametres?.semaine || '';
             document.getElementById('param-date-debut').value = data.parametres?.date_debut || '';
@@ -1115,6 +1117,7 @@
         }
         
         function collecterDonnees() {
+            collecterNouveauContenu();
             data.codes = {
                 conducteur: document.getElementById('code-conducteur').value || '2026',
                 admin: document.getElementById('code-admin').value || '1982'
@@ -1170,6 +1173,8 @@
             renderEquipe();
             renderSondages();
             renderPhotos();
+            renderLignes();
+            renderProfilsList();
         }
         
         function renderKPIs() {
@@ -1807,33 +1812,6 @@
                 },
                 profils: data.accidentologie?.profils || []
             };
-        }
-
-        // ══════════════════════════════════════════════════════════════════════
-        // PATCH : étendre les fonctions existantes
-        // ══════════════════════════════════════════════════════════════════════
-
-        // Surcharger renderAll pour inclure les nouveaux onglets
-        const _renderAllOriginal = renderAll;
-        function renderAll() {
-            _renderAllOriginal();
-            renderLignes();
-            renderProfilsList();
-        }
-
-        // Surcharger remplirFormulaires pour inclure les nouveaux
-        const _remplirOriginal = remplirFormulaires;
-        function remplirFormulaires() {
-            _remplirOriginal();
-            remplirAccidentologie();
-            remplirAccueil();
-        }
-
-        // Surcharger collecterDonnees pour inclure les nouveaux
-        const _collecterOriginal = collecterDonnees;
-        function collecterDonnees() {
-            _collecterOriginal();
-            collecterNouveauContenu();
         }
 
         // ══════════════════════════════════════════════════════════════════════
