@@ -180,7 +180,6 @@
         <button class="nav-tab" data-tab="sondages"><i class="fas fa-poll"></i> Sondages</button>
         <button class="nav-tab" data-tab="idees"><i class="fas fa-lightbulb"></i> Idées<span class="nav-badge" id="ideesBadge" style="display:none;">0</span></button>
         <button class="nav-tab" data-tab="photos"><i class="fas fa-camera"></i> Photos</button>
-        <button class="nav-tab" data-tab="accueil"><i class="fas fa-home"></i> Accueil</button>
     </nav>
     
     <!-- Main Content -->
@@ -632,80 +631,6 @@
             </div>
         </section>
         
-        <!-- ===== ONGLET ACCUEIL ===== -->
-        <section id="accueil" class="tab-content">
-            <div class="card">
-                <div class="card-header"><i class="fas fa-bullhorn"></i> Bannière principale (Accueil conducteurs)</div>
-                <div class="card-body">
-                    <div class="info-box">
-                        <p>Cette bannière apparaît en haut de la page d'accueil des conducteurs. Activez/désactivez-la et personnalisez son contenu.</p>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex:0 0 auto;">
-                            <label>Bannière active</label>
-                            <label class="toggle">
-                                <input type="checkbox" id="banniere-actif" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Titre de la bannière</label>
-                        <input type="text" id="banniere-titre" placeholder="Ex: Nouvelles lignes &amp; plans — Rentrée 2026" value="Nouvelles lignes &amp; plans — Rentrée 2026">
-                    </div>
-                    <div class="form-group">
-                        <label>Sous-titre / Description</label>
-                        <textarea id="banniere-soustitre" rows="3" placeholder="Ex: 24 lignes ILEVIA Comines disponibles...">24 lignes ILEVIA Comines disponibles. Consultez les plans mis à jour pour septembre 2026.</textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Texte du bouton</label>
-                            <input type="text" id="banniere-btn-texte" placeholder="Ex: Voir les lignes →" value="→">
-                        </div>
-                        <div class="form-group">
-                            <label>Lien du bouton (ancre ou URL)</label>
-                            <input type="text" id="banniere-btn-lien" placeholder="Ex: #lignes" value="#lignes">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Couleur de fond (hex)</label>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <input type="color" id="banniere-couleur" value="#00B4CC" style="width:60px;height:40px;border:1px solid #ddd;border-radius:8px;padding:2px;">
-                            <input type="text" id="banniere-couleur-hex" placeholder="#00B4CC" value="#00B4CC" style="flex:1;">
-                        </div>
-                    </div>
-                    <div style="margin-top:15px;padding:20px;border-radius:12px;background:var(--turquoise);color:white;">
-                        <h3 style="margin:0 0 8px;">👁️ Aperçu</h3>
-                        <p id="banniere-apercu-titre" style="font-size:1.1rem;font-weight:bold;">Nouvelles lignes &amp; plans — Rentrée 2026</p>
-                        <p id="banniere-apercu-soustitre" style="font-size:0.9rem;opacity:0.9;">24 lignes ILEVIA Comines disponibles...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><i class="fas fa-calendar-alt"></i> Message d'accueil hebdomadaire</div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label>Message pour les conducteurs (affiché cette semaine)</label>
-                        <textarea id="accueil-message" rows="4" placeholder="Ex: Bonjour à toute l'équipe ! Cette semaine, point important sur la sécurité..."></textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group" style="flex:0 0 auto;">
-                            <label>Message actif</label>
-                            <label class="toggle">
-                                <input type="checkbox" id="accueil-message-actif">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== ONGLET LIGNES ===== -->
-
-        <!-- ===== ONGLET ACCIDENTOLOGIE ===== -->
-
     </main>
 
     <script>
@@ -818,13 +743,6 @@
         // ══════════════════════════════════════════════════════════════════════
         
         function chargerDonnees() {
-            // Afficher l'UI immédiatement sans attendre Firebase
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-            remplirFormulaires();
-            renderAll();
-
-            // Charger Firebase en arrière-plan
             db.ref('donnees').once('value').then(snapshot => {
                 if (snapshot.exists()) {
                     data = { ...data, ...snapshot.val() };
@@ -832,8 +750,11 @@
                 remplirFormulaires();
                 renderAll();
                 chargerStats();
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
             }).catch(err => {
-                console.error('Erreur chargement Firebase:', err);
+                console.error('Erreur chargement:', err);
+                alert('Erreur de chargement des données');
             });
             
             // Charger suggestions en temps réel
@@ -917,8 +838,6 @@
         function remplirFormulaires() {
             document.getElementById('code-conducteur').value = data.codes?.conducteur || '2026';
             document.getElementById('code-admin').value = data.codes?.admin || '1982';
-            remplirAccidentologie();
-            remplirAccueil();
             
             document.getElementById('param-semaine').value = data.parametres?.semaine || '';
             document.getElementById('param-date-debut').value = data.parametres?.date_debut || '';
@@ -957,7 +876,6 @@
         }
         
         function collecterDonnees() {
-            collecterNouveauContenu();
             data.codes = {
                 conducteur: document.getElementById('code-conducteur').value || '2026',
                 admin: document.getElementById('code-admin').value || '1982'
@@ -1013,8 +931,6 @@
             renderEquipe();
             renderSondages();
             renderPhotos();
-            renderLignes();
-            renderProfilsList();
         }
         
         function renderKPIs() {
@@ -1440,220 +1356,6 @@
             w.document.close();
         }
         
-        // ══════════════════════════════════════════════════════════════════════
-        // LIGNES ILEVIA
-        // ══════════════════════════════════════════════════════════════════════
-
-        function ajouterLigne() {
-            const ligne = {
-                numero: document.getElementById('new-ligne-num').value.toUpperCase(),
-                type: document.getElementById('new-ligne-type').value,
-                couleur: document.getElementById('new-ligne-couleur').value,
-                url: document.getElementById('new-ligne-url').value,
-                nom: document.getElementById('new-ligne-nom').value,
-                actif: document.getElementById('new-ligne-actif').checked
-            };
-            if (!ligne.numero || !ligne.url) { alert('Numéro et lien PDF requis'); return; }
-            if (!data.lignes) data.lignes = [];
-            data.lignes.push(ligne);
-            renderLignes();
-            toggleForm('ligne-form');
-            document.getElementById('new-ligne-num').value = '';
-            document.getElementById('new-ligne-url').value = '';
-            document.getElementById('new-ligne-nom').value = '';
-        }
-
-        function supprimerLigne(i) {
-            if (confirm('Supprimer cette ligne ?')) { data.lignes.splice(i, 1); renderLignes(); }
-        }
-
-        function toggleLigne(i) { data.lignes[i].actif = !data.lignes[i].actif; renderLignes(); }
-
-        const TYPES_LABELS = {
-            interurbaine: { label: '🚌 Interurbaine', color: '#1976D2' },
-            express: { label: '⚡ Express', color: '#7B1FA2' },
-            liane: { label: '🔵 Liane', color: '#0097A7' },
-            nuit: { label: '🌙 Nuit', color: '#37474F' },
-            scolaire: { label: '🏫 Scolaire', color: '#388E3C' }
-        };
-
-        function renderLignes() {
-            const list = document.getElementById('lignes-list');
-            if (!data.lignes || !data.lignes.length) {
-                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucune ligne configurée</p>';
-                return;
-            }
-            // Grouper par type
-            const grouped = {};
-            data.lignes.forEach((l, i) => {
-                if (!grouped[l.type]) grouped[l.type] = [];
-                grouped[l.type].push({ ...l, idx: i });
-            });
-            const order = ['interurbaine', 'express', 'liane', 'nuit', 'scolaire'];
-            let html = '';
-            order.forEach(type => {
-                if (!grouped[type]) return;
-                const info = TYPES_LABELS[type] || { label: type, color: '#999' };
-                html += `<div style="margin-bottom:15px;">`;
-                html += `<div style="font-weight:700;margin-bottom:8px;padding:6px 12px;background:#f0f0f0;border-radius:8px;">${info.label}</div>`;
-                grouped[type].forEach(l => {
-                    html += `
-                    <div class="item-card">
-                        <div class="item-content" style="display:flex;align-items:center;gap:12px;">
-                            <div style="width:44px;height:44px;border-radius:8px;background:${l.couleur};display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:0.85rem;flex-shrink:0;">${l.numero}</div>
-                            <div>
-                                <div class="item-title">${l.nom || l.numero}</div>
-                                <div class="item-desc"><a href="${l.url}" target="_blank" style="color:var(--bleu);"><i class="fas fa-file-pdf"></i> Voir le plan</a></div>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <span class="status-badge ${l.actif ? 'active' : 'inactive'}">${l.actif ? 'Actif' : 'Inactif'}</span>
-                            <button class="btn btn-secondary btn-icon" onclick="toggleLigne(${l.idx})" title="${l.actif ? 'Désactiver' : 'Activer'}"><i class="fas fa-eye${l.actif ? '-slash' : ''}"></i></button>
-                            <button class="btn btn-danger btn-icon" onclick="supprimerLigne(${l.idx})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
-                });
-                html += `</div>`;
-            });
-            list.innerHTML = html;
-        }
-
-        // ══════════════════════════════════════════════════════════════════════
-        // ACCIDENTOLOGIE
-        // ══════════════════════════════════════════════════════════════════════
-
-        function ajouterProfil() {
-            const profil = {
-                tranche: document.getElementById('new-profil-tranche').value,
-                nb: parseInt(document.getElementById('new-profil-nb').value) || 0
-            };
-            if (!profil.tranche) return;
-            if (!data.accidentologie) data.accidentologie = {};
-            if (!data.accidentologie.profils) data.accidentologie.profils = [];
-            data.accidentologie.profils.push(profil);
-            renderProfilsList();
-            toggleForm('profil-form');
-            document.getElementById('new-profil-tranche').value = '';
-            document.getElementById('new-profil-nb').value = 0;
-        }
-
-        function supprimerProfil(i) {
-            if (confirm('Supprimer ?')) { data.accidentologie.profils.splice(i, 1); renderProfilsList(); }
-        }
-
-        function renderProfilsList() {
-            const list = document.getElementById('profil-list');
-            const profils = data.accidentologie?.profils || [];
-            if (!profils.length) {
-                list.innerHTML = '<p style="color:var(--gris);text-align:center;">Aucun profil saisi</p>';
-                return;
-            }
-            const sorted = [...profils].sort((a, b) => b.nb - a.nb);
-            list.innerHTML = sorted.map((p, i) => `
-                <div class="item-card">
-                    <div class="item-content">
-                        <div class="item-title">📅 ${p.tranche}</div>
-                        <div class="item-desc">${p.nb} accident${p.nb > 1 ? 's' : ''}</div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-danger btn-icon" onclick="supprimerProfil(${profils.indexOf(p)})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function remplirAccidentologie() {
-            const a = data.accidentologie || {};
-            document.getElementById('accid-total').value = a.total || 40;
-            document.getElementById('accid-evolution').value = a.evolution || '+29%';
-            document.getElementById('accid-responsabilite').value = a.responsabilite || '84%';
-            document.getElementById('accid-points-fixes').value = a.points_fixes || '55%';
-            document.getElementById('accid-permis-2ans').value = a.permis_2ans || 21;
-            document.getElementById('accid-rapport-lien').value = a.rapport_lien || 'rapports/rapport-accidentologie-janv-avril-2026.pdf';
-            document.getElementById('accid-alerte-texte').value = a.alerte_texte || 'Mars & Avril : 12 accidents chacun — tendance haussière.';
-            const m2026 = a.mensuel_2026 || { janv: 9, fevr: 7, mars: 12, avr: 12 };
-            const m2025 = a.mensuel_2025 || { janv: 0, fevr: 0, mars: 0, avr: 0 };
-            document.getElementById('accid-janv-2026').value = m2026.janv || 0;
-            document.getElementById('accid-fevr-2026').value = m2026.fevr || 0;
-            document.getElementById('accid-mars-2026').value = m2026.mars || 0;
-            document.getElementById('accid-avr-2026').value = m2026.avr || 0;
-            document.getElementById('accid-janv-2025').value = m2025.janv || 0;
-            document.getElementById('accid-fevr-2025').value = m2025.fevr || 0;
-            document.getElementById('accid-mars-2025').value = m2025.mars || 0;
-            document.getElementById('accid-avr-2025').value = m2025.avr || 0;
-            renderProfilsList();
-        }
-
-        function remplirAccueil() {
-            const b = data.banniere || {};
-            document.getElementById('banniere-actif').checked = b.actif !== false;
-            document.getElementById('banniere-titre').value = b.titre || 'Nouvelles lignes & plans — Rentrée 2026';
-            document.getElementById('banniere-soustitre').value = b.soustitre || '24 lignes ILEVIA Comines disponibles. Consultez les plans mis à jour pour septembre 2026.';
-            document.getElementById('banniere-btn-texte').value = b.btn_texte || '→';
-            document.getElementById('banniere-btn-lien').value = b.btn_lien || '#lignes';
-            document.getElementById('banniere-couleur').value = b.couleur || '#00B4CC';
-            document.getElementById('banniere-couleur-hex').value = b.couleur || '#00B4CC';
-            document.getElementById('accueil-message').value = data.accueil?.message || '';
-            document.getElementById('accueil-message-actif').checked = data.accueil?.message_actif || false;
-        }
-
-        // Sync color picker <-> text input
-        document.getElementById('banniere-couleur')?.addEventListener('input', e => {
-            document.getElementById('banniere-couleur-hex').value = e.target.value;
-            document.getElementById('banniere-apercu-titre').closest('div').style.background = e.target.value;
-        });
-        document.getElementById('banniere-couleur-hex')?.addEventListener('input', e => {
-            if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
-                document.getElementById('banniere-couleur').value = e.target.value;
-                document.getElementById('banniere-apercu-titre').closest('div').style.background = e.target.value;
-            }
-        });
-        document.getElementById('banniere-titre')?.addEventListener('input', e => {
-            document.getElementById('banniere-apercu-titre').textContent = e.target.value;
-        });
-        document.getElementById('banniere-soustitre')?.addEventListener('input', e => {
-            document.getElementById('banniere-apercu-soustitre').textContent = e.target.value;
-        });
-
-        function collecterNouveauContenu() {
-            // Accueil / Bannière
-            data.banniere = {
-                actif: document.getElementById('banniere-actif').checked,
-                titre: document.getElementById('banniere-titre').value,
-                soustitre: document.getElementById('banniere-soustitre').value,
-                btn_texte: document.getElementById('banniere-btn-texte').value,
-                btn_lien: document.getElementById('banniere-btn-lien').value,
-                couleur: document.getElementById('banniere-couleur').value
-            };
-            data.accueil = {
-                message: document.getElementById('accueil-message').value,
-                message_actif: document.getElementById('accueil-message-actif').checked
-            };
-            // Accidentologie
-            data.accidentologie = {
-                total: parseInt(document.getElementById('accid-total').value) || 0,
-                evolution: document.getElementById('accid-evolution').value,
-                responsabilite: document.getElementById('accid-responsabilite').value,
-                points_fixes: document.getElementById('accid-points-fixes').value,
-                permis_2ans: parseInt(document.getElementById('accid-permis-2ans').value) || 0,
-                rapport_lien: document.getElementById('accid-rapport-lien').value,
-                alerte_texte: document.getElementById('accid-alerte-texte').value,
-                mensuel_2026: {
-                    janv: parseInt(document.getElementById('accid-janv-2026').value) || 0,
-                    fevr: parseInt(document.getElementById('accid-fevr-2026').value) || 0,
-                    mars: parseInt(document.getElementById('accid-mars-2026').value) || 0,
-                    avr: parseInt(document.getElementById('accid-avr-2026').value) || 0
-                },
-                mensuel_2025: {
-                    janv: parseInt(document.getElementById('accid-janv-2025').value) || 0,
-                    fevr: parseInt(document.getElementById('accid-fevr-2025').value) || 0,
-                    mars: parseInt(document.getElementById('accid-mars-2025').value) || 0,
-                    avr: parseInt(document.getElementById('accid-avr-2025').value) || 0
-                },
-                profils: data.accidentologie?.profils || []
-            };
-        }
-
         // ══════════════════════════════════════════════════════════════════════
         // INIT
         // ══════════════════════════════════════════════════════════════════════
