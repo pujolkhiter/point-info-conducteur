@@ -417,39 +417,39 @@
             <!-- Accidentologie Cumul 2026 -->
             <div class="card" style="margin-top:0.75rem;">
                 <div class="card-header" style="background:linear-gradient(90deg,#FFEBEE,transparent);border-left:4px solid var(--rouge);">
-                    <i class="fas fa-car-crash" style="color:var(--rouge);"></i> Accidentologie — Cumul Jan/Août 2026
+                    <i class="fas fa-car-crash" style="color:var(--rouge);"></i> Accidentologie — Cumul Jan/Avr 2026
                     <a href="#" onclick="document.querySelector('[data-tab=securite]').click();return false;" style="margin-left:auto;font-size:0.75rem;color:var(--rouge);text-decoration:none;font-weight:600;">Détails →</a>
                 </div>
                 <div class="card-body" style="padding:0.75rem;">
                     <div class="kpi-accidento">
                         <div class="kpi-acc rouge">
                             <div class="icon"><i class="fas fa-car-crash"></i></div>
-                            <div class="val">96</div>
-                            <div class="lbl">Sinistres<br>Jan–Août 2026</div>
+                            <div class="val">40</div>
+                            <div class="lbl">Accidents<br>Jan–Avr 2026</div>
                             <div class="badge-acc bad"><i class="fas fa-arrow-up"></i> +29% vs 2025</div>
                         </div>
                         <div class="kpi-acc orange">
                             <div class="icon"><i class="fas fa-gavel"></i></div>
-                            <div class="val">87%</div>
+                            <div class="val">84%</div>
                             <div class="lbl">Responsabilité<br>entière</div>
-                            <div class="badge-acc warn">Évitables</div>
+                            <div class="badge-acc warn">27/32 accid.</div>
                         </div>
                         <div class="kpi-acc bleu">
                             <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div class="val">63</div>
-                            <div class="lbl">Accidents<br>responsables</div>
-                            <div class="badge-acc warn">vs 49 en 2025</div>
+                            <div class="val">55%</div>
+                            <div class="lbl">Points fixes<br>sans tiers</div>
+                            <div class="badge-acc warn">Évitables</div>
                         </div>
                         <div class="kpi-acc violet">
                             <div class="icon"><i class="fas fa-id-card"></i></div>
-                            <div class="val">10</div>
-                            <div class="lbl">HLP à vide<br>(sans vigilance)</div>
-                            <div class="badge-acc warn">Terminus</div>
+                            <div class="val">21</div>
+                            <div class="lbl">Accid. permis<br>&lt; 2 ans</div>
+                            <div class="badge-acc bad">53% du total</div>
                         </div>
                     </div>
                     <div style="background:#FFEBEE;border-left:3px solid var(--rouge);padding:8px 10px;border-radius:6px;font-size:0.78rem;margin-top:0.5rem;display:flex;align-items:center;gap:8px;">
                         <span style="font-size:1.1rem;">⚠️</span>
-                        <span><strong>Taux fréquence :</strong> 1.16 vs 0.86 en 2025 (+34%). <strong>Objectif septembre :</strong> 0 accident responsable. <a href="rapports/rapport-accidentologie-janv-aout-2026.pdf" target="_blank" style="color:var(--rouge);font-weight:600;">Rapport PDF →</a></span>
+                        <span><strong>Mars & Avril :</strong> 12 accidents chacun — tendance haussière. <a href="rapports/rapport-accidentologie-janv-avril-2026.pdf" target="_blank" style="color:var(--rouge);font-weight:600;">Rapport PDF →</a></span>
                     </div>
                 </div>
             </div>
@@ -462,41 +462,37 @@
             <div class="rapport-banner">
                 <div style="font-size:1.8rem;">⚠️</div>
                 <div style="flex:1;">
-                    <div style="font-weight:700;font-size:0.9rem;">Rapport Accidentologie — Jan/Août 2026</div>
-                    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">96 sinistres (63 responsables) — +29% vs 2025 | TF: 1.16 (+34%)</div>
-                    <a class="dl-btn" href="rapports/rapport-accidentologie-janv-aout-2026.pdf" target="_blank"><i class="fas fa-file-pdf"></i> Télécharger le rapport</a>
+                    <div style="font-weight:700;font-size:0.9rem;">Rapport Accidentologie — Jan/Avr 2026</div>
+                    <div style="font-size:0.8rem;opacity:0.9;margin-top:2px;">40 accidents ce quadrimestre — +29% vs 2025</div>
+                    <a class="dl-btn" href="rapports/rapport-accidentologie-janv-avril-2026.pdf" target="_blank"><i class="fas fa-file-pdf"></i> Télécharger le rapport</a>
                 </div>
             </div>
 
             <!-- KPIs Accidentologie -->
-            <div class="section-title" style="margin-bottom:0.75rem;"><i class="fas fa-car-crash" style="color:var(--rouge)"></i> Accidentologie — Jan/Août 2026</div>
+            <div class="section-title" style="margin-bottom:0.75rem;"><i class="fas fa-car-crash" style="color:var(--rouge)"></i> Accidentologie — Quadrimestre 1/2026</div>
             <div class="kpi-accidento">
-                <div class="kpi-acc rouge"><div class="icon"><i class="fas fa-car-crash"></i></div><div class="val">63</div><div class="lbl">Accidents<br>responsables</div><div class="badge-acc bad"><i class="fas fa-arrow-up"></i> +29% vs 2025</div></div>
-                <div class="kpi-acc orange"><div class="icon"><i class="fas fa-gavel"></i></div><div class="val">87%</div><div class="lbl">Responsabilité<br>entière</div><div class="badge-acc warn">9/10 évitables</div></div>
-                <div class="kpi-acc bleu"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="val">1 sur 2</div><div class="lbl">Sans tiers<br>(évitables)</div><div class="badge-acc warn">Vigilance</div></div>
-                <div class="kpi-acc violet"><div class="icon"><i class="fas fa-id-card"></i></div><div class="val">4/10</div><div class="lbl">Permis &lt; 6 mois<br>(pic)</div><div class="badge-acc bad">Mentor requis</div></div>
+                <div class="kpi-acc rouge"><div class="icon"><i class="fas fa-car-crash"></i></div><div class="val">40</div><div class="lbl">Accidents<br>Jan–Avr 2026</div><div class="badge-acc bad"><i class="fas fa-arrow-up"></i> +29% vs 2025</div></div>
+                <div class="kpi-acc orange"><div class="icon"><i class="fas fa-gavel"></i></div><div class="val">84%</div><div class="lbl">Responsabilité<br>entière</div><div class="badge-acc warn">27/32 accidents</div></div>
+                <div class="kpi-acc bleu"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><div class="val">55%</div><div class="lbl">Sur points fixes<br>sans tiers</div><div class="badge-acc warn">Évitables</div></div>
+                <div class="kpi-acc violet"><div class="icon"><i class="fas fa-id-card"></i></div><div class="val">7</div><div class="lbl">Accid. permis<br>1–2 ans (pic)</div><div class="badge-acc bad">Accompagnement +</div></div>
             </div>
 
             <!-- Graphique évolution mensuelle -->
             <div class="card" style="margin-bottom:0.75rem;">
-                <div class="card-header securite"><i class="fas fa-chart-bar"></i> Évolution mensuelle 2026 vs 2025 (Jan–Août)</div>
+                <div class="card-header securite"><i class="fas fa-chart-bar"></i> Évolution mensuelle 2026 vs 2025</div>
                 <div class="card-body" style="padding:1rem;">
                     <div class="chart-bars">
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:75px" title="2025: ~6"></div><div class="b cur" style="height:108px" title="2026: 9"></div></div><div class="bar-lbl">Janv.<br><b>9</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:75px" title="2025: ~6"></div><div class="b cur" style="height:84px" title="2026: 7"></div></div><div class="bar-lbl">Févr.<br><b>7</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:75px" title="2025: ~7"></div><div class="b cur" style="height:144px" title="2026: 12"></div></div><div class="bar-lbl">Mars<br><b>12</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:84px" title="2025: ~7"></div><div class="b cur" style="height:144px" title="2026: 12"></div></div><div class="bar-lbl">Avr.<br><b>12</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:75px" title="2025: ~6"></div><div class="b cur" style="height:72px" title="2026: 6"></div></div><div class="bar-lbl">Mai<br><b>6</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:84px" title="2025: ~7"></div><div class="b cur" style="height:132px" title="2026: 11"></div></div><div class="bar-lbl">Juin<br><b>11</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:72px" title="2025: ~6"></div><div class="b cur" style="height:60px" title="2026: 5"></div></div><div class="bar-lbl">Juil.<br><b>5</b></div></div>
-                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:72px" title="2025: ~6"></div><div class="b cur" style="height:60px" title="2026: 5"></div></div><div class="bar-lbl">Août<br><b>5</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:105px" title="2026: 9"></div></div><div class="bar-lbl">Janv.<br><b>9</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:81px" title="2026: 7"></div></div><div class="bar-lbl">Févr.<br><b>7</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:81px" title="2025: ~7"></div><div class="b cur" style="height:140px" title="2026: 12"></div></div><div class="bar-lbl">Mars<br><b>12</b></div></div>
+                        <div class="bar-col"><div class="bar-pair"><div class="b prv" style="height:105px" title="2025: ~10"></div><div class="b cur" style="height:140px" title="2026: 12"></div></div><div class="bar-lbl">Avr.<br><b>12</b></div></div>
                     </div>
                     <div style="display:flex;gap:1rem;font-size:0.75rem;margin-top:0.5rem;">
                         <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--rouge);margin-right:4px;vertical-align:middle;"></span>2026</span>
                         <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#BDBDBD;margin-right:4px;vertical-align:middle;"></span>2025 (N-1)</span>
                     </div>
                     <div style="background:#FFF3E0;border-left:3px solid var(--orange);padding:8px 10px;border-radius:6px;font-size:0.8rem;margin-top:0.75rem;">
-                        ⚠️ <strong>Mars, Avril & Juin :</strong> pics dépassant le pire mois 2025. <strong>Bon signal :</strong> juillet & août stabilisés à ~5 accidents/mois. <strong>Objectif septembre :</strong> maintenir &lt;5/mois.
+                        ⚠️ <strong>Mars & Avril : 12 accidents chacun</strong> — hausse confirmée vs 2025.
                     </div>
                 </div>
             </div>
@@ -505,47 +501,16 @@
             <div class="card" style="margin-bottom:0.75rem;">
                 <div class="card-header securite"><i class="fas fa-users"></i> Profil conducteurs accidentés — ancienneté</div>
                 <div class="card-body" style="padding:1rem;">
-                    <div class="profile-row"><div class="profile-name" style="font-weight:700;color:var(--rouge);">Moins de 6 mois</div><div class="profile-track"><div class="profile-fill" style="width:100%;background:var(--rouge);"><span>4 sur 10</span></div></div><div class="profile-n">40%</div></div>
-                    <div class="profile-row"><div class="profile-name">6–12 mois</div><div class="profile-track"><div class="profile-fill" style="width:60%;background:#EF5350;"><span>36%</span></div></div><div class="profile-n">~23</div></div>
-                    <div class="profile-row"><div class="profile-name">1–2 ans</div><div class="profile-track"><div class="profile-fill" style="width:50%;background:var(--orange);"><span>30%</span></div></div><div class="profile-n">~19</div></div>
-                    <div class="profile-row"><div class="profile-name">2–5 ans</div><div class="profile-track"><div class="profile-fill" style="width:25%;background:var(--orange);"><span>15%</span></div></div><div class="profile-n">~9</div></div>
-                    <div class="profile-row"><div class="profile-name">5–10 ans</div><div class="profile-track"><div class="profile-fill" style="width:15%;background:#FFA726;"><span>9%</span></div></div><div class="profile-n">~6</div></div>
-                    <div class="profile-row"><div class="profile-name">10+ ans</div><div class="profile-track"><div class="profile-fill" style="width:8%;background:var(--vert);"><span>5%</span></div></div><div class="profile-n">~3</div></div>
+                    <div class="profile-row"><div class="profile-name" style="font-weight:700;color:var(--rouge);">1–2 ans</div><div class="profile-track"><div class="profile-fill" style="width:100%;background:var(--rouge);"><span>7 accidents</span></div></div><div class="profile-n">7</div></div>
+                    <div class="profile-row"><div class="profile-name">2–6 mois</div><div class="profile-track"><div class="profile-fill" style="width:86%;background:#EF5350;"><span>6</span></div></div><div class="profile-n">6</div></div>
+                    <div class="profile-row"><div class="profile-name">2–5 ans</div><div class="profile-track"><div class="profile-fill" style="width:71%;background:var(--orange);"><span>5</span></div></div><div class="profile-n">5</div></div>
+                    <div class="profile-row"><div class="profile-name">6–12 mois</div><div class="profile-track"><div class="profile-fill" style="width:57%;background:var(--orange);"><span>4</span></div></div><div class="profile-n">4</div></div>
+                    <div class="profile-row"><div class="profile-name">1–2 mois</div><div class="profile-track"><div class="profile-fill" style="width:43%;background:#FFA726;"><span>3</span></div></div><div class="profile-n">3</div></div>
+                    <div class="profile-row"><div class="profile-name">5–10 ans</div><div class="profile-track"><div class="profile-fill" style="width:43%;background:#FFA726;"><span>3</span></div></div><div class="profile-n">3</div></div>
+                    <div class="profile-row"><div class="profile-name">10–20 ans</div><div class="profile-track"><div class="profile-fill" style="width:29%;background:var(--vert);"><span>2</span></div></div><div class="profile-n">2</div></div>
+                    <div class="profile-row"><div class="profile-name">15–30 j.</div><div class="profile-track"><div class="profile-fill" style="width:14%;background:var(--vert);"><span>1</span></div></div><div class="profile-n">1</div></div>
                     <div style="background:#E3F2FD;border-left:3px solid var(--bleu);padding:8px 10px;border-radius:6px;font-size:0.8rem;margin-top:0.75rem;">
-                        💡 <strong>4 sur 10 accidentés ont &lt; 6 mois d'ancienneté</strong> — Mentorat & suivi renforcés prioritaires. 1 accident sur 2 sans tiers = évitables.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Points noirs géographiques -->
-            <div class="card" style="margin-bottom:0.75rem;">
-                <div class="card-header securite"><i class="fas fa-map-marker-alt"></i> Points noirs du réseau — TOP 5 zones</div>
-                <div class="card-body" style="padding:1rem;">
-                    <div style="display:grid;gap:0.75rem;">
-                        <div style="display:flex;align-items:center;gap:12px;padding:0.75rem;background:#FFEBEE;border-radius:8px;border-left:4px solid var(--rouge);">
-                            <div style="font-size:1.5rem;font-weight:700;color:var(--rouge);width:40px;text-align:center;">1</div>
-                            <div style="flex:1;">
-                                <div style="font-weight:600;color:var(--rouge);">Lille — Gares / Euralille</div>
-                                <div style="font-size:0.85rem;color:var(--text-light);">15 sinistres | Densité trafic très élevée</div>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:12px;padding:0.75rem;background:#FFF3E0;border-radius:8px;border-left:4px solid var(--orange);">
-                            <div style="font-size:1.3rem;font-weight:700;color:var(--orange);width:40px;text-align:center;">2-4</div>
-                            <div style="flex:1;">
-                                <div style="font-weight:600;color:var(--orange);">Comines (dépôt + centre-ville) & La Madeleine</div>
-                                <div style="font-size:0.85rem;color:var(--text-light);">8 + 8 + 5 = 21 sinistres | Comines : 13 au dépôt + 5 au centre</div>
-                            </div>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:12px;padding:0.75rem;background:#F3E5F5;border-radius:8px;border-left:4px solid var(--violet);">
-                            <div style="font-size:1.3rem;font-weight:700;color:var(--violet);width:40px;text-align:center;">5</div>
-                            <div style="flex:1;">
-                                <div style="font-weight:600;color:var(--violet);">Tourcoing — 2 zones</div>
-                                <div style="font-size:0.85rem;color:var(--text-light);">8 sinistres | Routes principales & jonctions</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="background:#E3F2FD;border-left:3px solid var(--bleu);padding:8px 10px;border-radius:6px;font-size:0.8rem;margin-top:0.75rem;">
-                        📍 <strong>Pic horaires :</strong> 8h–11h et 16h–18h (trafic dense). <strong>Pic jour :</strong> mardi, puis lundi & samedi. Vigilance renforcée obligatoire ces créneaux.
+                        💡 <strong>≤ 2 ans :</strong> 21 accidents sur 40 → Accompagnement renforcé prioritaire
                     </div>
                 </div>
             </div>
